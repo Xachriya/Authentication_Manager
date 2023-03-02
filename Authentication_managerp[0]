@@ -1,0 +1,118 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+void accout_check();
+void login();
+void registr();
+
+class Authentication_manager
+{
+private:
+    string usrname;
+    string password;
+    string maiden_name;
+
+public:
+    string password_check;
+    string usrname_check;
+    string maidenname_check;
+
+    void accout_check()
+    {
+        char choice;
+        cout << "Do you have an account? y/n";
+        cin >> choice;
+        if (choice == 'y')
+        {
+            login();
+        }
+        else
+        {
+            registr();
+        }
+    }
+
+    void login()
+    {
+        char check;
+        char choice;
+        string u, p;
+        cout << "Username: ";
+        cin >> usrname_check;
+        cout << "Password:";
+        cin >> password_check;
+        ifstream input("abc.txt");
+        while (input >> u >> p)
+        {
+            if (u == usrname_check && p == password_check)
+            {
+                cout << "Successful login";
+            }
+            else
+            {
+                cout << "Login error";
+            }
+        }
+        input.close();
+        cout << "Do you like to retry y/n";
+        cin >> choice;
+        if (choice == 'y')
+        {
+            login();
+        }
+        else
+        {
+            registr();
+        }
+    }
+
+    void registr()
+    {
+        cout << "\nEnter new user name: ";
+        cin >> usrname;
+        cout << "\nEnter new password: ";
+        cin >> password;
+        cout << "\nEnter mother's maiden name: ";
+        cin >> maiden_name;
+        ofstream reg("abc.txt", ios::app);
+        reg << usrname << " " << password << " " << maiden_name << endl;
+        reg.close();
+        cout << "\nRegistration Successful";
+    }
+
+    void reset()
+    {
+        cout << "\nEnter mother's maiden name: ";
+        cin >> maidenname_check;
+        ifstream res("abc.txt");
+        while (res >> usrname >> password >> maiden_name)
+        {
+            if (maidenname_check == maiden_name)
+            {
+                ofstream rese("abc.txt", ios::app);
+                cout << "\nEnter new user name: ";
+                cin >> usrname;
+                cout << "\nEnter new password: ";
+                cin >> password;
+                rese << usrname << " " << password << " " << maidenname_check << endl;
+                rese.close();
+                cout << "\nAccount reset done";
+                return;
+            }
+        }
+        res.close();
+        cout << "\nNo account found";
+        registr();
+    }
+};
+
+int main()
+{
+    Authentication_manager o;
+    o.accout_check();
+    cout<<"if you want to reset your registered account::";
+
+    o.reset();
+    return 0;
+}
